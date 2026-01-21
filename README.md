@@ -139,4 +139,4 @@ Total Followers =
 SUM('Instagram-Data'[Followers])
 ```
 
-### For more connect with me on linkedIn: 
+### For more connect with me on linkedIn: https://www.linkedin.com/in/iyanu-adebara-5a62a0103/
