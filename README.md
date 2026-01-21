@@ -65,6 +65,22 @@ The original dataset was sourced from **Alex The Analyst’s Power BI for BI Ana
 
 ---
 
+```
+Bottom 5 Accounts Flag =
+VAR MaxRank =
+    MAXX(
+        ALL('Instagram-Data'[Account]),
+        [Rank Account by Engagement]
+    )
+RETURN
+IF(
+    [Rank Account by Engagement] >= MaxRank - 4,
+    1,
+    0
+)
+```
+
+
 ## Data Cleaning Notes (Reality Check)
 Although the goal was “Power BI-only,” I quickly realized a real-world truth:
 
@@ -77,16 +93,31 @@ Although the goal was “Power BI-only,” I quickly realized a real-world truth
 - Text cleanup (trim/clean)
 - Removed duplicates where needed
 - Built calculated engagement fields used across visuals
+  
+```
+Top 5 Accounts Flag =
+IF(
+    [Rank Account by Engagement] <= 5,
+    1,
+    0
+)
+```
 
 **Cleaning Screenshots**
-- Excel cleanup snapshots:
+- Power Query cleanup snapshots:
   ![cleaning 1](images/cleanining-1.png)
   ![cleaning 2](images/cleanining-2.png)
   ![cleaning 3](images/cleanining-3.png)
 
 - DAX + Power Query view:
   ![DAX + Power Query](images/Dax-Power%20Query.png)
-
+```
+Engagement Rate % =
+DIVIDE(
+    [Total Engagement Avg],
+    [Total Followers]
+)
+```
 ---
 
 ## Key Business Questions Answered
@@ -106,6 +137,22 @@ Although the goal was “Power BI-only,” I quickly realized a real-world truth
    - Top/least audience countries surfaced via KPIs
 
 ---
+```
+Best Performing Account =
+VAR TopAccount =
+    TOPN(
+        1,
+        'Instagram-Data',
+        'Instagram-Data'[EngagementAvg],
+        DESC
+    )
+RETURN
+    CONCATENATEX(
+        TopAccount,
+        'Instagram-Data'[Account],
+        ", "
+    )
+```
 
 ## Limitations & What Better Granularity Would Unlock
 A major challenge: the dataset wasn’t sufficiently **granular** for content-level performance.
@@ -127,6 +174,23 @@ With the right granularity, we could analyze:
 - Content strategy recommendations based on measurable patterns
 
 **Takeaway:** collecting the *right* level of granularity dramatically increases insight outcomes.
+```
+### UI Theme / Color Palette
+
+This dashboard uses a high-contrast executive theme:
+
+Grey: #232426
+
+Lighter black: #1a1a1d
+
+Dark orange: #eb972d
+
+Orange: #f1b440
+
+Light orange: #f5cb60
+
+White: #ffffff
+```
 
 ---
 
@@ -138,6 +202,20 @@ Below are a few of the core measures used to power the KPIs and visuals:
 Total Followers =
 SUM('Instagram-Data'[Followers])
 ```
+
+```
+Rank Account by Engagement =
+RANKX(
+    ALL('Instagram-Data'[Account]),
+    [Engagement Avg (Measure)],
+    ,
+    DESC,
+    DENSE
+)
+```
+**Credits:**
+Dataset source: Alex The Analyst – Power BI for BI Analytics course
+Dashboard build & storytelling: Iyanu
 
 ### For more connect with me on LinkedIn:
 https://www.linkedin.com/in/iyanu-adebara-5a62a0103/
